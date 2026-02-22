@@ -11,12 +11,12 @@ export async function supabaseFetch(
   path: string,
   options: RequestInit = {},
 ) {
-  const headers = {
-    apikey: supabaseAnonKey,
-    Authorization: `Bearer ${supabaseAnonKey}`,
-    "Content-Type": "application/json",
-    ...(options.headers ?? {}),
-  };
+  const headers = new Headers(options.headers ?? {});
+  headers.set("apikey", supabaseAnonKey!);
+  headers.set("Authorization", `Bearer ${supabaseAnonKey!}`);
+  if (!headers.has("Content-Type")) {
+    headers.set("Content-Type", "application/json");
+  }
 
   return fetch(`${supabaseUrl}${path}`, {
     ...options,
